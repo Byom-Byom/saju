@@ -64,8 +64,9 @@ section.frame { margin-top: 22px; }
 /* input */
 .people { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .person { border: 1px solid var(--line); border-radius: 4px; padding: 16px; background: var(--panel-2); }
-.people.solo { grid-template-columns: minmax(0, 500px); }
-.person[hidden] { display: none; }
+.person.off { cursor: pointer; }
+.person.off .fields, .person.off h3 { opacity: .35; pointer-events: none; transition: opacity .2s; }
+.person.off:hover .fields, .person.off:hover h3 { opacity: .5; }
 .person h3 { margin: 0 0 12px; font-family: var(--serif); font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
 .row { display: flex; flex-wrap: wrap; gap: 8px 10px; margin-bottom: 10px; align-items: flex-end; }
 label.f { display: flex; flex-direction: column; font-size: 12px; color: var(--ink-2); gap: 4px; }
@@ -215,9 +216,9 @@ footer p { margin: 4px 0; }
 
   <section class="frame">
     <div class="sec-h"><span class="hj">出生</span><h2>출생 정보</h2></div>
-    <div class="people solo" id="people">
+    <div class="people" id="people">
       <div class="person" id="pA"></div>
-      <div class="person" id="pB" hidden></div>
+      <div class="person off" id="pB" title="눌러서 궁합 보기"></div>
     </div>
     <div class="actions">
       <button class="btn main" id="go" disabled>엔진 불러오는 중…</button>
@@ -301,8 +302,8 @@ pB.innerHTML = personForm("상대 (궁합)");
 let useB = false;
 function setUseB(on) {
   useB = on;
-  pB.hidden = !on;
-  $("people").classList.toggle("solo", !on);
+  pB.classList.toggle("off", !on);
+  pB.title = on ? "" : "눌러서 궁합 보기";
   $("toggleB").textContent = on ? "궁합 닫기" : "궁합 보기";
 }
 
@@ -411,6 +412,7 @@ document.querySelectorAll(".person input, .person select").forEach(x => x.addEve
   save();
 }));
 $("toggleB").addEventListener("click", () => { setUseB(!useB); if (useB) showFix(pB); save(); });
+pB.addEventListener("click", () => { if (!useB) { setUseB(true); showFix(pB); save(); } });
 
 // ---------- engine ----------
 async function computePerson(p, asOfYear) {
