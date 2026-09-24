@@ -4,7 +4,7 @@
 
 ## 설치해 달라고 하면
 1. `node --version`으로 Node.js 20 이상인지 본다. 없으면 사용자 승인을 받아 설치한다(Windows `winget install OpenJS.NodeJS.LTS`, macOS `brew install node`).
-2. 저장소 맨 위 폴더에서 `node local/setup.mjs`를 실행한다. 원작 엔진을 `local/engine/`에 받아 빌드하고 등록 명령을 출력한다. git이 필요하다.
+2. 저장소 맨 위 폴더에서 `node local/setup.mjs`를 실행한다. 원작 엔진을 `local/engine/`에 받아 빌드하고 등록 명령을 출력한다. git이 필요하며, npm의 `allow-scripts` 경고는 무시해도 된다.
 3. 출력된 등록 명령 가운데 지금 쓰는 앱의 것을 사용자 승인을 받아 실행한다. Claude Code는 `claude mcp add ...`, Codex는 `~/.codex/config.toml`에 추가한다.
 4. 앱을 다시 시작하라고 안내한다. 다시 시작한 뒤 legend-saju 도구가 보이면 설치가 끝난 것이다.
 5. 저장소 위치를 옮기면 2~4를 다시 한다.
