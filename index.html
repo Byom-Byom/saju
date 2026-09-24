@@ -189,6 +189,9 @@ details.connect ol, details.connect ul { margin: 12px 0 0; padding-left: 20px; f
 footer { margin-top: 40px; font-size: 12px; color: var(--ink-3); }
 footer .orn { margin-bottom: 16px; }
 footer p { margin: 4px 0; }
+footer .safe { color: var(--ink-2); font-size: 13px; margin-bottom: 12px; }
+.linkbtn { border: 0; background: none; padding: 0; color: var(--gold-2); text-decoration: underline; cursor: pointer; font-size: inherit; }
+#forgot { margin-left: 8px; color: var(--gold-2); }
 #tip { position: fixed; pointer-events: none; background: var(--gold-2); color: var(--on-gold); font-size: 13px;
   padding: 5px 10px; border-radius: 3px; display: none; z-index: 10; }
 
@@ -239,6 +242,7 @@ footer p { margin: 4px 0; }
 
   <footer>
     <div class="orn"><svg viewBox="0 0 14 14"><path d="M7 0 8.2 5.8 14 7 8.2 8.2 7 14 5.8 8.2 0 7 5.8 5.8z" fill="currentColor"/></svg></div>
+    <p class="safe">입력한 생년월일과 이름은 서버로 보내지지도, 어딘가에 저장되지도 않습니다. 계산은 이 브라우저 안에서만 이루어지고, 다음에 다시 입력하지 않도록 이 기기의 브라우저에만 기억됩니다. <button type="button" id="forget" class="linkbtn">이 기기에서 지우기</button><span id="forgot"></span></p>
     <p>계산 엔진: <a href="https://github.com/SihyeonJeon/legend-saju" target="_blank" rel="noopener">Legend Saju</a> (SihyeonJeon) · Apache License 2.0. 배경 그림도 원작 저장소의 것을 썼습니다.</p>
     <p>이 사이트는 원작 엔진을 브라우저에서 돌도록 묶고 화면을 새로 만든 비공식 개인 사이트이며, 원작자와 관계가 없습니다. 수익을 목적으로 하지 않습니다.</p>
     <p>사주 결과는 참고용입니다. 라이선스와 출처 전문은 <a href="NOTICE.md">NOTICE.md</a>에 있습니다.</p>
@@ -416,6 +420,14 @@ document.querySelectorAll(".person input, .person select").forEach(x => x.addEve
 }));
 $("toggleB").addEventListener("click", () => { setUseB(!useB); if (useB) showFix(pB); save(); });
 pB.addEventListener("click", () => { if (!useB) { setUseB(true); showFix(pB); save(); } });
+$("forget").addEventListener("click", () => {
+  try { localStorage.removeItem(STORE); } catch {}
+  const blank = { gender: "여", calendar: "solar", place: "kr" };
+  writePerson(pA, blank); writePerson(pB, blank); setUseB(false);
+  showFix(pA); showFix(pB);
+  state = null; results.innerHTML = ""; who.hidden = true; $("err").textContent = "";
+  $("forgot").textContent = "이 기기에 기억된 입력과 결과를 지웠습니다.";
+});
 
 // ---------- engine ----------
 async function computePerson(p, asOfYear) {
