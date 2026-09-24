@@ -260,7 +260,7 @@ const BRANCH = [["子", "자"], ["丑", "축"], ["寅", "인"], ["卯", "묘"], 
 const DOMAIN = { identity: "성향", career: "직업", wealth: "재물", relationship: "관계", health: "건강", timing: "시기",
   family: "가족", education: "학업", study: "학업", move: "이동", other: "기타" };
 const SEOUL_LONGITUDE = 127;
-const CONNECTOR_URL = "https://saju.tripsight.co.kr/mcp";
+const INSTALL_PROMPT = "https://github.com/Byom-Byom/saju 받아서 사주 로컬로 설치해 줘";
 const TODAY = new Date();
 const THIS_YEAR = TODAY.getFullYear();
 const STORE = "saju-site-input-v1";
@@ -551,18 +551,17 @@ function askHTML() {
       <span class="done" id="copied"></span>
     </div>
     <details class="connect">
-      <summary>AI가 직접 계산하게 연결하기 (더 깊은 풀이)</summary>
-      <p style="margin-top:12px">아래 주소를 AI 앱에 연결해 두면, AI가 이 엔진을 직접 불러 계산하면서 대화로 풀어 줍니다. 한 번만 설정하면 됩니다.</p>
-      <div class="url"><code>${CONNECTOR_URL}</code><button class="btn ghost sm" id="copyUrl">주소 복사</button></div>
+      <summary>AI와 상담하듯 보기 (Claude Code·Codex 사용자)</summary>
+      <p style="margin-top:12px">Claude Code나 Codex를 쓰신다면 사주 엔진을 내 컴퓨터에 설치할 수 있어요. 설치하면 AI가 직접 계산하고 사주 카드를 그려 가며 대화로 풀어 줘요.</p>
+      <div class="url"><code>${INSTALL_PROMPT}</code><button class="btn ghost sm" id="copyUrl">문장 복사</button></div>
       <ol>
-        <li>Claude: 설정의 커넥터 메뉴에서 사용자 지정 커넥터를 추가하고, 이 주소를 넣습니다.</li>
-        <li>ChatGPT: 설정의 앱·커넥터 메뉴에서 개발자 모드를 켠 뒤 새 커넥터를 만들고, 이 주소를 넣습니다.</li>
-        <li>연결한 뒤 "1990년 1월 1일 오전 9시 서울 출생 여자, 사주 봐줘"처럼 물으면 됩니다.</li>
+        <li>위 문장을 AI에게 그대로 말하면, AI가 설치 안내를 읽고 알아서 설치해요.</li>
+        <li>설치 중에 Node.js 설치 같은 허락 요청이 뜨면 승인해 주세요.</li>
+        <li>설치가 끝나면 "사주 봐줘, 1990년 1월 1일 오전 9시 서울 출생 여자"처럼 물어보세요.</li>
       </ol>
       <ul>
-        <li>메뉴 이름과 위치는 앱 버전과 요금제에 따라 다를 수 있습니다.</li>
-        <li>이 주소는 원작자가 운영하는 서버입니다. 연결해서 물으면 생년월일이 그 서버로 전송됩니다.</li>
-        <li>자기 컴퓨터에 엔진을 직접 설치해 쓰려면 <a href="https://github.com/SihyeonJeon/legend-saju" target="_blank" rel="noopener">원작 저장소</a>의 안내를 따르세요.</li>
+        <li>계산은 모두 내 컴퓨터 안에서 이루어져요.</li>
+        <li>ChatGPT나 claude.ai 웹 채팅처럼 컴퓨터 프로그램을 실행하지 못하는 AI에서는 위의 "결과 복사"를 써 주세요.</li>
       </ul>
     </details>
   </section>`;
@@ -581,7 +580,7 @@ function render() {
     catch (err) { $("err").textContent = err.message; }
   });
   $("copy").addEventListener("click", () => copyText(resultText(), "결과를 복사했습니다. AI 대화창에 붙여 넣으세요."));
-  $("copyUrl").addEventListener("click", () => copyText(CONNECTOR_URL, "연결 주소를 복사했습니다."));
+  $("copyUrl").addEventListener("click", () => copyText(INSTALL_PROMPT, "설치 문장을 복사했습니다. AI에게 붙여 넣으세요."));
   $("dl").addEventListener("click", download);
   $("img").addEventListener("click", saveImage);
 }
