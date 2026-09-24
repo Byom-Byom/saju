@@ -99,6 +99,9 @@ input[type=text] { width: 130px; }
 
 .who { margin: 26px 0 0; }
 .who[hidden] { display: none; }
+.tools { display: flex; justify-content: flex-end; margin-top: 22px; }
+.tools + section.frame { margin-top: 10px; }
+.btn:disabled { opacity: .5; cursor: wait; }
 
 /* natal */
 .dm { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; margin-bottom: 18px; }
@@ -565,7 +568,7 @@ function askHTML() {
 function render() {
   if (!state) return;
   const cur = state.who === "B" && state.B ? state.B : state.A;
-  results.innerHTML = natalHTML(cur) + elementsHTML(cur.natal) + readingHTML(cur.reading) + timelineHTML(cur.timeline)
+  results.innerHTML = `<div class="tools"><button class="btn ghost sm" id="img">이미지로 저장</button></div>` + natalHTML(cur) + elementsHTML(cur.natal) + readingHTML(cur.reading) + timelineHTML(cur.timeline)
     + (state.compat ? compatHTML(state.compat, state.A.input.name, state.B?.input.name) : "") + askHTML();
   const now = results.querySelector(".dy.now");
   if (now) { const tl = $("tl"); tl.scrollLeft = now.offsetLeft - tl.offsetLeft - 16; }
@@ -577,6 +580,7 @@ function render() {
   $("copy").addEventListener("click", () => copyText(resultText(), "결과를 복사했습니다. AI 대화창에 붙여 넣으세요."));
   $("copyUrl").addEventListener("click", () => copyText(CONNECTOR_URL, "연결 주소를 복사했습니다."));
   $("dl").addEventListener("click", download);
+  $("img").addEventListener("click", saveImage);
 }
 
 // ---------- export ----------
@@ -629,13 +633,55 @@ async function copyText(text, msg) {
   }
   const el = $("copied"); if (el) el.textContent = ok ? msg : "복사하지 못했습니다. 파일로 받기를 써 주세요.";
 }
-function download() {
-  const blob = new Blob([resultText()], { type: "text/plain;charset=utf-8" });
+const fileBase = () => {
+  const cur = state.who === "B" && state.B ? state.B : state.A;
+  return `사주 결과${cur.input.name ? " - " + cur.input.name : ""}`;
+};
+function saveBlob(blob, name) {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = `사주 결과${state.A.input.name ? " - " + state.A.input.name : ""}.txt`;
+  a.download = name;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+function download() {
+  saveBlob(new Blob([resultText()], { type: "text/plain;charset=utf-8" }), fileBase() + ".txt");
+}
+
+// Result cards as one PNG. html2canvas is loaded only when the button is pressed.
+function loadScript(src) {
+  return new Promise((ok, fail) => {
+    const s = document.createElement("script");
+    s.src = src; s.onload = ok; s.onerror = () => fail(new Error("이미지 도구를 불러오지 못했습니다. 인터넷 연결을 확인해 주세요."));
+    document.head.appendChild(s);
+  });
+}
+async function saveImage() {
+  const btn = $("img"), label = btn.textContent;
+  btn.disabled = true; btn.textContent = "이미지 만드는 중…";
+  try {
+    if (!window.html2canvas) await loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+    await document.fonts?.ready;
+    const canvas = await html2canvas(results, {
+      backgroundColor: "#0b111a", scale: 2, useCORS: true, windowWidth: 880,
+      ignoreElements: el => el.classList?.contains("ask") || el.classList?.contains("tools"),
+      onclone: doc => {
+        const r = doc.getElementById("results");
+        r.style.padding = "8px 24px 28px";
+        r.style.width = "840px";
+        r.insertAdjacentHTML("afterbegin", `<div style="display:flex;justify-content:space-between;align-items:baseline;padding:18px 2px 0;color:#c9a45c;font-family:'Noto Serif KR',serif">
+          <span style="font-size:22px;font-weight:700;color:#eee8da">사주 <span style="color:#c9a45c">보기</span></span>
+          <span style="font-size:12px;letter-spacing:.08em;color:#847e72">byom-byom.github.io/saju</span></div>`);
+        doc.querySelectorAll(".tl").forEach(t => { t.style.flexWrap = "wrap"; t.style.overflow = "visible"; });
+      },
+    });
+    const blob = await new Promise(res => canvas.toBlob(res, "image/png"));
+    saveBlob(blob, fileBase() + ".png");
+  } catch (e) {
+    $("err").textContent = e.message;
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
 }
 
 // ---------- actions ----------
