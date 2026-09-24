@@ -586,13 +586,14 @@ function render() {
 }
 
 // ---------- export ----------
+const TIME_BASIS = { recorded: "기록", family_memory: "가족 기억", estimated: "추정" };
 function personText(c, title) {
   const n = c.natal, P = n.pillars, t = c.timeline;
   const order = [["time", "시주"], ["day", "일주"], ["month", "월주"], ["year", "년주"]];
   const v = n.verdicts || {};
   const lines = [
     `■ ${title}${c.input.name ? ` (${c.input.name})` : ""}`,
-    `- 입력: ${c.prep.entered}, ${c.input.gender === "남" ? "남성" : "여성"}, ${c.input.place === "kr" ? "한국 출생" : "외국 출생"}`,
+    `- 입력: ${c.prep.entered}, ${c.input.gender === "남" ? "남성" : "여성"}, ${c.input.place === "kr" ? "한국 출생" : "외국 출생"}, 시각 근거 ${TIME_BASIS[c.input.birthTimeAccuracy] || "기록"}`,
     `- 계산 시각: ${c.prep.used}, ${c.prep.hourBranch} / ${c.prep.notes.join(" · ")}`,
     `- 원국(시·일·월·년): ${order.map(([k]) => P[k].gan + P[k].zhi).join(" ")}`,
     ...order.map(([k, l]) => `  · ${l} ${P[k].gan}${P[k].zhi}(${P[k].ganKo}${P[k].zhiKo}) ${k === "day" ? "일간(본인)" : `천간 십신 ${P[k].shiShenGan}`}, 12운성 ${P[k].diShi}`),
@@ -622,7 +623,9 @@ function resultText() {
       ...(c.signals || []).map(s => `- ${s.type}: ${s.text}`),
       ...[...groupReading(state.compat.reading).values()].flat().map(x => `- 엔진 해석: ${x}`));
   }
-  parts.push("", "위 계산 결과를 바탕으로 사주를 풀이해 줘. 계산 값은 다시 계산하지 말고 그대로 쓰고, 시각 보정이 반영된 값이라는 점을 감안해 줘.");
+  parts.push("",
+    "위 계산 결과로 내 사주를 풀이해 줘. 사주 이론 설명이 아니라 내 원국과 대운을 근거로 한 상담으로 해 줘. 계산 값은 다시 계산하지 말고 그대로 쓰고, 시각 보정이 반영된 값이라는 점을 감안해 줘.",
+    "풀이를 시작하기 전에 먼저 나에게 한 번 물어봐 줘. 전체를 자세히 볼지, 아니면 연애·재물·직업·건강·올해 운세 중 궁금한 항목부터 볼지.");
   return parts.join("\n");
 }
 async function copyText(text, msg) {
