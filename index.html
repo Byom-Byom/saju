@@ -94,6 +94,7 @@ input[type=text] { width: 130px; }
 .btn.ghost:hover, .btn.main:hover:not(:disabled) { filter: brightness(1.12); }
 .btn.sm { padding: 6px 12px; font-size: 13px; }
 .hint { font-size: 13px; color: var(--ink-3); }
+p.hint { margin: 10px 0 0; }
 .err { color: var(--warn); font-size: 14px; margin-top: 10px; }
 .err:empty { display: none; }
 
@@ -229,6 +230,7 @@ footer .safe { color: var(--ink-2); font-size: 13px; margin-bottom: 12px; }
       <button class="btn ghost" id="toggleB">궁합 보기</button>
       <span class="hint">출생 시각을 모르면 계산할 수 없습니다. 오전·오후가 헷갈리면 두 번 계산해 비교해 보세요.</span>
     </div>
+    <p class="hint">한국 출생은 지역과 상관없이 서울 경도로 보정합니다. 국내 지역 간 차이는 10분 안쪽이라, 태어난 시각이 시주가 바뀌는 시각에 딱 붙어 있지 않으면 결과가 같습니다.</p>
     <div class="err" id="err"></div>
   </section>
 
