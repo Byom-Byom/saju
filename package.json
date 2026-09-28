@@ -1,0 +1,17 @@
+{
+  "name": "saju",
+  "private": true,
+  "type": "module",
+  "description": "사주 보기: 사이트와 명령줄 사주 엔진을 만드는 도구 모음. 받아서 쓰기만 할 때는 설치할 필요가 없다.",
+  "scripts": {
+    "build": "node build/build-engine.mjs",
+    "test": "vitest run --root engine"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "iztro": "2.6.0",
+    "lunar-typescript": "1.8.6",
+    "vitest": "4.1.11",
+    "zod": "4.4.3"
+  }
+}

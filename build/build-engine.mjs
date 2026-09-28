@@ -1,24 +1,34 @@
-// Rebuilds ../saju-engine.js from the local engine checkout (../../엔진).
-// Run: node build/build-engine.mjs   (from the site folder, after `npm ci` in the engine)
-import { createRequire } from "node:module";
+// Rebuilds ../saju-engine.js (browser) and ../saju.mjs (command line) from ../engine.
+// Run from the site folder: npm ci, then npm run build.
+import { build } from "esbuild";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const here = path.dirname(fileURLToPath(import.meta.url));
-const engineDir = path.join(here, "..", "..", "엔진");
-const require = createRequire(path.join(engineDir, "package.json"));
-const esbuild = require("esbuild");
+const root = path.join(here, "..");
+const notice = "Saju engine, modified from Legend Saju (https://github.com/SihyeonJeon/legend-saju), Apache-2.0. See NOTICE.md.";
 
-await esbuild.build({
+await build({
   entryPoints: [path.join(here, "engine-entry.ts")],
   bundle: true,
   platform: "browser",
   format: "iife",
   globalName: "SajuEngine",
   minify: true,
-  nodePaths: [path.join(engineDir, "node_modules")],
-  outfile: path.join(here, "..", "saju-engine.js"),
+  outfile: path.join(root, "saju-engine.js"),
   legalComments: "eof",
-  banner: { js: "/* Legend Saju engine (https://github.com/SihyeonJeon/legend-saju), Apache-2.0. Bundled for the browser. See NOTICE.md. */" },
+  banner: { js: `/* ${notice} Bundled for the browser. */` },
 });
-console.log("saju-engine.js built");
+
+await build({
+  entryPoints: [path.join(here, "cli-entry.ts")],
+  bundle: true,
+  platform: "node",
+  target: "node20",
+  format: "esm",
+  minify: true,
+  outfile: path.join(root, "saju.mjs"),
+  legalComments: "eof",
+  banner: { js: `/* ${notice} Command-line build. */\nimport { createRequire as __createRequire } from "node:module";\nconst require = __createRequire(import.meta.url);` },
+});
+console.log("saju-engine.js and saju.mjs built");

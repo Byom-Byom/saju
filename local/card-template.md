@@ -8,7 +8,7 @@
 
 ## 채우는 법
 - 입력 시각은 사이트와 같게 보정한다. 한국 출생은 서울 경도(동경 127도) 기준으로 지금 표준시 −32분, 1954~1961년 UTC+8:30 시기 −2분, 서머타임 기간은 여기서 60분을 더 뺀다. 외국 출생은 보정하지 않는다. 날짜가 바뀌면 날짜도 바꾼다.
-- 값은 legend-saju 도구에서 받는다(앱에 따라 `mcp__legend-saju__` 같은 접두어가 붙는다). 원국은 `legend_saju_card_natal`, 대운은 `legend_saju_card_timeline`, 궁합은 `legend_saju_card_compatibility`의 `structuredContent`를 쓴다. 풀이 근거는 `legend_saju_read_fortune`으로 따로 받는다.
+- 값은 저장소 맨 위 폴더의 `saju.mjs`로 받는다(부르는 법은 `AGENTS.md`). 원국은 `card_natal`, 대운은 `card_timeline`, 궁합은 `card_compatibility` 결과의 `structuredContent`를 쓴다. 풀이 근거는 `read_fortune`으로 따로 받는다.
 - 오행 글자 색: 목 `#7cc79a`, 화 `#ec7a6a`, 토 `#dcb45e`, 금 `#cfd4de`, 수 `#7ea7ea`. 간지 글자마다 그 오행 색을 입힌다.
 - `{{한 줄 풀이}}`는 AI가 계산 근거로 쓴 한두 문장이다. 자세한 풀이는 카드 밖 본문에 쓴다.
 - 원국 카드는 사주를 볼 때마다 띄우고, 대운·궁합 카드는 요청이 있거나 그 주제를 풀 때 띄운다.
