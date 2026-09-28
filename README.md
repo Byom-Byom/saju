@@ -16,7 +16,7 @@
 Claude Code나 Codex를 쓴다면 이 저장소를 내 컴퓨터에 받아, AI가 직접 계산하고 사주 카드를 그려 가며 대화로 풀어 주게 할 수 있습니다. 엔진이 저장소 안에 들어 있어서 따로 등록할 것이 없습니다.
 
 1. AI에게 이렇게 말합니다: `https://github.com/Byom-Byom/saju 받아서 사주 로컬로 설치해 줘`
-2. AI가 `AGENTS.md`(Claude Code는 `CLAUDE.md`)의 안내대로 준비합니다. 허락 요청이 뜨면 승인합니다.
+2. AI가 `AGENTS.md`(Claude Code는 `CLAUDE.md`)의 안내대로 설치합니다. 허락 요청이 뜨면 승인합니다.
 3. 설치가 끝나면 "사주 봐줘, 1990년 1월 1일 오전 9시 서울 출생 여자"처럼 물어봅니다.
 
 Node.js 20 이상이 필요하며, 계산은 모두 내 컴퓨터 안에서 이루어집니다.
@@ -27,7 +27,7 @@ Node.js 20 이상이 필요하며, 계산은 모두 내 컴퓨터 안에서 이�
 - 외국 출생을 고르면 입력한 현지 시각을 그대로 씁니다.
 
 ## 출처
-계산 엔진은 SihyeonJeon의 [Legend Saju](https://github.com/SihyeonJeon/legend-saju)(Apache License 2.0)를 가져와 이 저장소에서 고쳐 관리하는 것입니다. 이 저장소는 원작자와 관계없는 비공식 개인 저장소이며 수익을 목적으로 하지 않습니다. 자세한 출처와 라이선스는 [NOTICE.md](NOTICE.md)에 있습니다.
+계산 엔진은 SihyeonJeon의 [Legend Saju](https://github.com/SihyeonJeon/legend-saju)(Apache License 2.0)를 가져와, 이 저장소에서 고쳐 관리합니다. 이 저장소는 원작자와 관계없는 비공식 개인 저장소이며 수익을 목적으로 하지 않습니다. 자세한 출처와 라이선스는 [NOTICE.md](NOTICE.md)에 있습니다.
 
 ## 폴더 구성
 - `index.html`: 화면
@@ -37,4 +37,4 @@ Node.js 20 이상이 필요하며, 계산은 모두 내 컴퓨터 안에서 이�
 - `assets/`: 배경 그림과 공유 미리보기 그림
 - `build/`·`package.json`: 엔진을 다시 묶는 스크립트와 미리보기 그림의 원본
 - `local/`: 사주 카드 틀(`card-template.md`)
-- `AGENTS.md`·`CLAUDE.md`: 저장소를 받은 AI가 읽는 준비·사용 안내
+- `AGENTS.md`·`CLAUDE.md`: 저장소를 받은 AI가 읽는 설치·사용 안내
