@@ -13,6 +13,7 @@
 - `engine/`: 원작의 `src/`, `data/`, `tests/`, `docs/`와 출처 문서(`THIRD_PARTY_NOTICES.md`, `DATA_LICENSES.md`, `SOURCE_SNAPSHOT.json`)를 가져왔습니다. 원작의 git 기록, 배포 설정, 빌드 결과물은 가져오지 않았습니다.
 - `engine/src/tools.ts`: 원작 `src/mcp.ts`에서 MCP 서버와 ChatGPT 위젯 부분을 덜어 내고, 도구 이름과 처리 함수를 잇는 표를 더했습니다. 계산과 입력 검사는 원작과 같습니다.
 - 지운 파일: `src/mcp.ts`, `src/http.ts`, `src/mcp-output-schema.ts`, `src/widgets/`, `tests/mcp-http.test.ts`. 위 변경에 맞춰 `tests/resolver.test.ts`를 고치고 `tests/mcp-widgets.test.ts`를 `tests/card-tools.test.ts`로 줄였습니다. 고친 파일 첫 줄에 바꾼 내용을 적었습니다.
+- `engine/src/engine/resolver.ts`·`engine-v2.ts`: 생년월일과 함께 효값·이름 획수·이름 한자·꿈 내용을 넣어도 입력 부족으로 표시되던 원작의 누락을 고쳤습니다. 이 입력들이 생애 종합 계산의 입력 검사까지 전달됩니다. 이에 맞춰 `tests/resolver.test.ts`에 시험을 더했습니다.
 - `saju.mjs`: `engine/`을 명령줄에서 쓰도록 묶은 파일입니다. 원작의 MCP 도구 13가지를 같은 입력과 결과로 부릅니다.
 - `saju-engine.js`: `engine/`의 원국·대운·궁합 카드 계산, 규칙 기반 해석, 음력 변환 함수를 브라우저용 파일 하나로 묶었습니다.
 - 묶는 방법은 `build/` 폴더와 `package.json`에 있습니다.

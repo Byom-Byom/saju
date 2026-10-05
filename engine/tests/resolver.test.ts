@@ -1,4 +1,4 @@
-// Modified from tests/resolver.test.ts of Legend Saju: the MCP server check now checks the tool table.
+// Modified from tests/resolver.test.ts of Legend Saju: the MCP server check now checks the tool table, and a dossier preflight input test was added.
 import { describe, expect, it } from "vitest";
 import {
   resolve,
@@ -164,6 +164,18 @@ describe("open-ended resolver", () => {
     const outside = resolve({ question: "꿈풀이", dream: "하늘에서 거대한 자주색 책이 내려왔다" });
     expect(outside.dreamAnalysis?.status).toBe("outside_active_scope");
     expect(outside.dreamAnalysis?.matches).toEqual([]);
+  });
+
+  it("keeps supplied non-birth inputs visible to the dossier preflight when birth is present", () => {
+    for (const [capability, extra] of [
+      ["juyeok_cast", { lineValues: [7, 8, 9, 6, 7, 8] }],
+      ["suri", { surnameStrokes: [16], givenStrokes: [10, 9] }],
+      ["dream_interpretation", { dream: "맑은 물에서 헤엄쳤다" }],
+    ] as const) {
+      const result = resolve({ question: "내 사주", birth, requestedCapabilities: [capability], ...extra });
+      expect(result.routes.find((route) => route.capability.id === capability)?.status).not.toBe("blocked");
+      expect(result.dossier?.blockedSystems.map((item) => item.capabilityId)).not.toContain(capability);
+    }
   });
 
   it("does not route an unused extra person into an unrelated reading", () => {

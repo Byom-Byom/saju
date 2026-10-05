@@ -1,3 +1,4 @@
+// Modified from src/engine/resolver.ts of Legend Saju: line values, name strokes/characters, and dream text now reach the dossier preflight.
 import {
   ENGINE_CAPABILITIES,
   ENGINE_SOURCE_BY_ID,
@@ -543,6 +544,7 @@ function resolveBase(input: LegendSajuResolveInput): LegendSajuResolution {
     ? interpretDream({ dream: input.dream, context: input.dreamContext, maxMatches: input.maxDreamMatches })
     : undefined;
 
+  const preflightInputs = queryContext(input);
   const dossier = input.birth
     ? buildLifeDossier({
         birth: input.birth,
@@ -552,6 +554,11 @@ function resolveBase(input: LegendSajuResolveInput): LegendSajuResolution {
         partnerBirth: input.partnerBirth,
         timelineRange: input.timelineRange,
         lifeEvents: input.lifeEvents,
+        lineValues: preflightInputs.lineValues,
+        surnameStrokes: preflightInputs.surnameStrokes,
+        givenStrokes: preflightInputs.givenStrokes,
+        name: preflightInputs.name,
+        dream: preflightInputs.dream,
         requestedCapabilities: selected,
       })
     : undefined;

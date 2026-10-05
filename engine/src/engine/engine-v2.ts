@@ -1,3 +1,4 @@
+// Modified from src/engine/engine-v2.ts of Legend Saju: the route preflight now sees line values, name strokes/characters, and dream text.
 /**
  * Question-first, cross-system life dossier.
  *
@@ -149,6 +150,12 @@ export interface LifeDossierInput {
   partnerBirth?: SajuInput;
   timelineRange?: { startYear: number; endYear: number };
   lifeEvents?: LifeEventEvidence[];
+  /** Preflight-only inputs for capabilities the resolver computes outside the dossier. */
+  lineValues?: number[];
+  surnameStrokes?: number[];
+  givenStrokes?: number[];
+  name?: { surname?: unknown[]; givenName?: unknown[] };
+  dream?: string;
   /** When provided, this execution plan is authoritative. Runtime IDs keep the schema open. */
   requestedCapabilities?: readonly string[];
 }
@@ -244,7 +251,12 @@ function routeContext(input: LifeDossierInput) {
     birthA: input.birth,
     birthB: input.partnerBirth,
     date: input.questionDateTime ?? input.targetDate ?? (input.timelineRange ? { year: input.timelineRange.startYear, month: 1, day: 1 } : undefined),
-    pastEvents: input.lifeEvents
+    pastEvents: input.lifeEvents,
+    lineValues: input.lineValues,
+    surnameStrokes: input.surnameStrokes,
+    givenStrokes: input.givenStrokes,
+    name: input.name,
+    dream: input.dream
   };
 }
 
