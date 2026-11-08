@@ -1,3 +1,4 @@
+// Modified from src/mcp-render.ts of Legend Saju: the natal card's useful-god lens filter moved to activeUsefulGodLenses.
 /**
  * Deterministic payload builders for the ChatGPT Apps widgets.
  *
@@ -20,7 +21,7 @@ import {
   STEM_KO,
 } from "./engine/saju-engine";
 import { currentLuck } from "./engine/saju-engine-advanced";
-import { evaluateMyeongriJudgment, type MyeongriJudgment, tenGodForStem } from "./engine/myeongri-judgment";
+import { activeUsefulGodLenses, evaluateMyeongriJudgment, type MyeongriJudgment, tenGodForStem } from "./engine/myeongri-judgment";
 
 const EL_HANJA: Record<string, string> = { 목: "木", 화: "火", 토: "土", 금: "金", 수: "水" };
 const STRENGTH_LABEL: Record<MyeongriJudgment["strength"]["status"], string> = {
@@ -74,7 +75,7 @@ function dayMasterPayload(chart: SajuChart) {
 }
 
 function verdictsPayload(judgment: MyeongriJudgment) {
-  const activeLenses = judgment.usefulGods.lenses.filter((lens) => lens.status === "active");
+  const activeLenses = activeUsefulGodLenses(judgment);
   const yongsinElements = [...new Set(activeLenses.flatMap((lens) => lens.candidateElements))];
   return {
     wangswae: {

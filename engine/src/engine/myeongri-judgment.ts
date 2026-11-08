@@ -1,3 +1,4 @@
+// Modified from src/engine/myeongri-judgment.ts of Legend Saju: added activeUsefulGodLenses, shared by the natal card and compatibility.
 /**
  * Source-bounded Myeongri judgment layer.
  *
@@ -476,6 +477,10 @@ export interface MyeongriJudgment {
   tenGodPresences: TenGodPresence[];
   sourceIds: string[];
   boundary: string;
+}
+
+export function activeUsefulGodLenses(judgment: MyeongriJudgment) {
+  return judgment.usefulGods.lenses.filter((lens) => lens.status === "active");
 }
 
 export function evaluateMyeongriJudgment(chart: SajuChart): MyeongriJudgment {

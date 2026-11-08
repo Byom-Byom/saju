@@ -1,5 +1,6 @@
-// Modified from tests/mcp-widgets.test.ts of Legend Saju: removed the widget HTML checks, since the widgets were removed.
+// Modified from tests/mcp-widgets.test.ts of Legend Saju: removed the widget HTML checks, since the widgets were removed; added the compatibility useful-god check.
 import { describe, expect, it } from "vitest";
+import { computeSajuChart, pickYongsin } from "../src/engine/saju-engine";
 import {
   buildCompatibilityCardPayload,
   buildFortuneCardsPayload,
@@ -43,6 +44,24 @@ describe("ChatGPT Apps widget payloads", () => {
     expect(payload.personA.dayGan).toBe("癸");
     expect(payload.signals.length).toBeGreaterThan(0);
     expect(payload.signals.every((signal: any) => typeof signal.type === "string" && signal.text.length > 0)).toBe(true);
+  });
+
+  it("judges compatibility useful-god signals by the natal card's useful-god candidates", () => {
+    const people = Array.from({ length: 24 }, (_, i) => ({
+      year: 1985 + i, month: (i % 12) + 1, day: 15, hour: 9, minute: 0, gender: (i % 2 ? "남" : "여") as "남" | "여",
+    }));
+    let oldHeuristicDisagrees = false;
+    for (let i = 0; i + 1 < people.length; i += 1) {
+      const [a, b] = [people[i], people[i + 1]];
+      const [natalA, natalB] = [buildNatalCardPayload(a) as any, buildNatalCardPayload(b) as any];
+      const texts = (buildCompatibilityCardPayload(a, b, {}) as any).signals.map((signal: any) => signal.text).join(" / ");
+      const aHelpsB = natalB.verdicts.yongsin.label.split("·").includes(natalA.dayMaster.el);
+      const bHelpsA = natalA.verdicts.yongsin.label.split("·").includes(natalB.dayMaster.el);
+      expect(texts.includes("A가 B에 보탬")).toBe(aHelpsB);
+      expect(texts.includes("B가 A에 보탬")).toBe(bHelpsA);
+      if (pickYongsin(computeSajuChart(b)).primary.includes(natalA.dayMaster.el) !== aHelpsB) oldHeuristicDisagrees = true;
+    }
+    expect(oldHeuristicDisagrees).toBe(true);
   });
 
   it("builds a luck timeline with exactly one current 대운 and a focus year", () => {

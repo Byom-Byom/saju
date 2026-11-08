@@ -1,3 +1,4 @@
+// Modified from src/engine/saju-engine.ts of Legend Saju: compatibility now judges useful-god signals by the natal card's active lenses instead of pickYongsin.
 /**
  * 사주(四柱) 결정적 계산·해석 엔진.
  *
@@ -9,6 +10,7 @@
  */
 import { Solar, Lunar, LunarYear, SolarUtil } from "lunar-typescript";
 import { lookupMyeongriTerm } from "./myeongri-knowledge-trilingual";
+import { activeUsefulGodLenses, evaluateMyeongriJudgment } from "./myeongri-judgment";
 
 export type Element = "목" | "화" | "토" | "금" | "수";
 export type Gender = "남" | "여";
@@ -314,11 +316,11 @@ export function compatibility(a: SajuInput, b: SajuInput): { dayPillarA: string;
   if (CHUNG[za] === zb) signals.push(`일지 충 ${za}${zb} — 변동·긴장(끌림과 충돌 공존)`);
   if (HAE[za] === zb) signals.push(`일지 해 ${za}${zb}`);
   for (const [x,y,z,name] of SANHAP) if ([x,y,z].includes(za) && [x,y,z].includes(zb) && za!==zb) signals.push(`일지 ${name} 삼합계 — 기운 공명`);
-  const ysa = pickYongsin(ca).primary, ysb = pickYongsin(cb).primary;
-  const aHelpsB = ysb.includes(ca.dayMaster.el), bHelpsA = ysa.includes(cb.dayMaster.el);
-  if (aHelpsB) signals.push(`A의 일간 오행(${ca.dayMaster.el})이 B의 용신 — A가 B에 보탬`);
-  if (bHelpsA) signals.push(`B의 일간 오행(${cb.dayMaster.el})이 A의 용신 — B가 A에 보탬`);
-  return { dayPillarA: pillarKo(ca.pillars.day.gz), dayPillarB: pillarKo(cb.pillars.day.gz), signals: signals.length ? signals : ["뚜렷한 합충 신호 약함 — 일지 외 전체 원국 종합 필요"], note: "일지=배우자궁 중심 1차 신호. 용신 상보는 heuristic. 전체 궁합은 원국·대운 종합." };
+  const usefulElements = (c: SajuChart) => activeUsefulGodLenses(evaluateMyeongriJudgment(c)).flatMap((lens) => lens.candidateElements);
+  const aHelpsB = usefulElements(cb).includes(ca.dayMaster.el), bHelpsA = usefulElements(ca).includes(cb.dayMaster.el);
+  if (aHelpsB) signals.push(`A의 일간 오행(${ca.dayMaster.el})이 B의 용신 후보 — A가 B에 보탬`);
+  if (bHelpsA) signals.push(`B의 일간 오행(${cb.dayMaster.el})이 A의 용신 후보 — B가 A에 보탬`);
+  return { dayPillarA: pillarKo(ca.pillars.day.gz), dayPillarB: pillarKo(cb.pillars.day.gz), signals: signals.length ? signals : ["뚜렷한 합충 신호 약함 — 일지 외 전체 원국 종합 필요"], note: "일지=배우자궁 중심 1차 신호. 용신 상보는 원국 판정의 활성 관법 후보 기준 heuristic. 전체 궁합은 원국·대운 종합." };
 }
 
 export { pillarKo, STEM_KO, BR_KO, EL_COLOR, EL_DIR };
