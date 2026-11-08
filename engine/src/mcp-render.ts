@@ -1,4 +1,4 @@
-// Modified from src/mcp-render.ts of Legend Saju: the natal card's useful-god lens filter moved to activeUsefulGodLenses.
+// Modified from src/mcp-render.ts of Legend Saju: the natal card's useful-god lens filter moved to activeUsefulGodLenses; the weak-signal notice is no longer typed as 충.
 /**
  * Deterministic payload builders for the ChatGPT Apps widgets.
  *
@@ -166,7 +166,8 @@ export function buildFortuneCardsPayload(
 /* ── ③ 궁합 카드 ── */
 function signalType(text: string): string {
   if (text.includes("육합") || text.includes("삼합")) return "합";
-  if (text.includes("충")) return "충";
+  // "합충 신호 약함" 안내문도 "충"을 포함하므로 시작 문구로 가림
+  if (text.startsWith("일지 충")) return "충";
   if (text.includes("형")) return "형";
   if (text.includes("파")) return "파";
   if (text.includes("해 ") || text.startsWith("일지 해")) return "해";

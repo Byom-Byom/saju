@@ -1,4 +1,4 @@
-// Modified from tests/mcp-widgets.test.ts of Legend Saju: removed the widget HTML checks, since the widgets were removed; added the compatibility useful-god check.
+// Modified from tests/mcp-widgets.test.ts of Legend Saju: removed the widget HTML checks, since the widgets were removed; added the compatibility useful-god and 충 label checks.
 import { describe, expect, it } from "vitest";
 import { computeSajuChart, pickYongsin } from "../src/engine/saju-engine";
 import {
@@ -62,6 +62,21 @@ describe("ChatGPT Apps widget payloads", () => {
       if (pickYongsin(computeSajuChart(b)).primary.includes(natalA.dayMaster.el) !== aHelpsB) oldHeuristicDisagrees = true;
     }
     expect(oldHeuristicDisagrees).toBe(true);
+  });
+
+  it("types only real day-branch clashes as 충, not the weak-signal notice", () => {
+    const start = new Date(Date.UTC(1992, 0, 1));
+    const signals = Array.from({ length: 60 }, (_, i) => {
+      const day = new Date(start.getTime() + i * 86400000);
+      const b = { year: day.getUTCFullYear(), month: day.getUTCMonth() + 1, day: day.getUTCDate(), hour: 9, minute: 0, gender: "남" as const };
+      return (buildCompatibilityCardPayload(birth, b, {}) as any).signals;
+    }).flat();
+    const notice = signals.filter((signal: any) => signal.text.includes("신호 약함"));
+    const clash = signals.filter((signal: any) => signal.text.startsWith("일지 충"));
+    expect(notice.length).toBeGreaterThan(0);
+    expect(clash.length).toBeGreaterThan(0);
+    expect(notice.every((signal: any) => signal.type === "참")).toBe(true);
+    expect(clash.every((signal: any) => signal.type === "충")).toBe(true);
   });
 
   it("builds a luck timeline with exactly one current 대운 and a focus year", () => {
